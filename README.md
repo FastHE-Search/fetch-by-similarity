@@ -1,7 +1,8 @@
 # FHE Benchmarking Suite - Fetch-by-Similarity Workload
 
-This repository contains a reference implementation of the
-Fetch-by-cosine-similarity workload of the FHE benchmarking suite of
+This repository contains the NYU / LG Electronics USA, Inc.'s
+implementation of the Fetch-by-cosine-similarity workload of the FHE
+benchmarking suite of
 [HomomorphicEncryption.org](https://www.HomomorphicEncryption.org).
 
 Submitters need to fork this repository, then replace the content of

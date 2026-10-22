@@ -1,25 +1,38 @@
 {
   "Timing": {
-    "Dataset generation": "6.3587s",
-    "Dataset preprocessing": "0.0029s",
-    "Key Generation": "3.0731s",
-    "Dataset encoding and encryption": "982.7158s",
-    "Encrypted dataset preprocessing": "0.013s",
-    "Query generation": "0.5563s",
-    "Query preprocessing": "0.0023s",
-    "Query encryption": "0.3709s",
-    "Encrypted computation": "846.4665s",
-    "Result decryption and postprocessing": "0.2841s",
-    "Total": "1839.8436s"
+    "Dataset generation": "8.5913s",
+    "Dataset preprocessing": "0.0234s",
+    "Key Generation": "0.7094s",
+    "Dataset encoding and encryption": "4.5926s",
+    "Encrypted dataset preprocessing": "2.742s",
+    "Query generation": "0.5024s",
+    "Query preprocessing": "0.0219s",
+    "Query encryption": "0.0108s",
+    "Encrypted computation": "0.0821s",
+    "Result decryption and postprocessing": "0.0082s",
+    "Total": "17.2839s"
   },
   "Bandwidth": {
-    "Public and evaluation keys": "2.9G",
-    "Encrypted database": "171.5G",
-    "Encrypted query": "24.0M",
-    "Encrypted results": "13.0M"
+    "Public and evaluation keys": "325.0M",
+    "Encrypted database": "9.0G",
+    "Encrypted query": "1.1M",
+    "Encrypted results": "1.0M"
   },
   "Server Reported": {
-    "Encrypted computation": "844s",
-    "Total": "846s"
+    "Client key generation": "0.6614s",
+    "Client DB encryption": "4.4896s",
+    "Encrypted dataset preprocessing": "2.707s",
+    "Server setup (load keys + DB once)": "2.707s",
+    "Client query encryption": "0.00980258s",
+    "Encrypted computation": "0.07675s",
+    "Total": "0.0804796s",
+    "Load query": "0.002886s",
+    "Encrypted computation (slowest shard)": "0.07675s",
+    "Homomorphic merge": "0s",
+    "Encrypted computation + merge": "0.07675s",
+    "Query stage in-process total": "0.0804796s",
+    "Query stage: shard exchange (incl. compute)": "0.0804162s",
+    "Query stage: merge exchange": "7.15256e-06s",
+    "Client decryption": "0.00599051s"
   }
 }

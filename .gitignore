@@ -1,9 +1,33 @@
-# Build artefacts
-*/build/
-io/
-datasets/
+# Build artefacts. The bare pattern matches a build directory at any
+# depth: */build/ only matched one level down, which let the CUDA
+# extension's CMake tree be committed by accident.
+build/
+
+# io/* and datasets/* rather than io/ and datasets/, so the .gitkeep in
+# each can be tracked: a directory that exists in a fresh clone is one
+# Docker never has to create for a bind mount, and Docker creates a
+# missing mount source as root. measurements/ is not ignored at all --
+# the result files in it are committed.
+io/*
+!io/.gitkeep
+datasets/*
+!datasets/.gitkeep
 third_party/
 harness/__pycache__/
+__pycache__/
+*.pyc
+
+# The build toolchain belongs OUTSIDE this repository -- assemble.sh puts
+# it at ../fbs-internal and refuses to write inside the fork. This rule
+# is a net for a stale copy: .gitignore would keep the sources out of a
+# commit but not out of a tarball or an scp of the directory. See
+# examples/fetch-by-similarity/packaging in cheddar-orion.
+internal/
+
+# Our tooling: the build scripts, the Cheddar patches, the CUDA and C
+# sources, and the Python sources the shipped objects were compiled
+# from. None of it is part of the submission. The authoritative copy
+# lives in the development repository; this one is for rebuilding here.
 
 # Prerequisites
 *.d
@@ -22,6 +46,21 @@ harness/__pycache__/
 *.so
 *.dylib
 *.dll
+
+# ... except the ones this submission ships. The compiled Python and the
+# CUDA extension ARE the submission: the sources are withheld, so these
+# objects are the deliverable rather than build output. Negations are
+# explicit so the artifacts are tracked by rule; CryptoLab force-added
+# their library instead, which works until someone forgets the flag.
+!submission/libs/
+!submission/libs/*.cpython-*.so
+!submission/libs/libfbsnative.so
+
+# The four timed stages and the client library are binaries the harness
+# invokes directly, so they ship too. build/ is ignored above because a
+# build directory normally holds output; this one holds deliverables.
+!submission/build/
+!submission/build/*
 
 # Fortran module files
 *.mod
