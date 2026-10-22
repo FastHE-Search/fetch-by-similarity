@@ -1,0 +1,38 @@
+{
+  "Timing": {
+    "Dataset generation": "248.3341s",
+    "Dataset preprocessing": "0.0238s",
+    "Key Generation": "0.7571s",
+    "Dataset encoding and encryption": "182.1003s",
+    "Encrypted dataset preprocessing": "19.836s",
+    "Query generation": "0.0897s",
+    "Query preprocessing": "0.0224s",
+    "Query encryption": "0.0119s",
+    "Encrypted computation": "0.7868s",
+    "Result decryption and postprocessing": "0.0084s",
+    "Total": "451.9704s"
+  },
+  "Bandwidth": {
+    "Public and evaluation keys": "362.0M",
+    "Encrypted database": "382.5G",
+    "Encrypted query": "1.3M",
+    "Encrypted results": "1.0M"
+  },
+  "Server Reported": {
+    "Client key generation": "0.7111s",
+    "Client DB encryption": "182.006s",
+    "Encrypted dataset preprocessing": "19.7974s",
+    "Server setup (load keys + DB once)": "19.7974s",
+    "Client query encryption": "0.0108774s",
+    "Encrypted computation": "0.775043s",
+    "Total": "0.7848s",
+    "Load query": "0.010721s",
+    "Encrypted computation (slowest shard)": "0.771733s",
+    "Homomorphic merge": "0.00331s",
+    "Encrypted computation + merge": "0.775043s",
+    "Query stage in-process total": "0.7848s",
+    "Query stage: shard exchange (incl. compute)": "0.781196s",
+    "Query stage: merge exchange": "0.00353694s",
+    "Client decryption": "0.00600195s"
+  }
+}
