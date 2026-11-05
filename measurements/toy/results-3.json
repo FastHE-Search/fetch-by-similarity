@@ -1,16 +1,16 @@
 {
   "Timing": {
-    "Dataset generation": "0.0959s",
-    "Dataset preprocessing": "0.0233s",
-    "Key Generation": "1.1939s",
-    "Dataset encoding and encryption": "0.372s",
-    "Encrypted dataset preprocessing": "1.5596s",
-    "Query generation": "0.2409s",
-    "Query preprocessing": "0.0215s",
-    "Query encryption": "0.0124s",
+    "Dataset generation": "0.0933s",
+    "Dataset preprocessing": "0.0227s",
+    "Key Generation": "1.201s",
+    "Dataset encoding and encryption": "0.3964s",
+    "Encrypted dataset preprocessing": "1.6663s",
+    "Query generation": "0.2411s",
+    "Query preprocessing": "0.022s",
+    "Query encryption": "0.0123s",
     "Encrypted computation": "0.015s",
-    "Result decryption and postprocessing": "0.0092s",
-    "Total": "3.5436s"
+    "Result decryption and postprocessing": "0.009s",
+    "Total": "3.6791s"
   },
   "Bandwidth": {
     "Public and evaluation keys": "726.5M",
@@ -19,20 +19,14 @@
     "Encrypted results": "5.0M"
   },
   "Server Reported": {
-    "Client key generation": "1.1395s",
-    "Client DB encryption": "0.2956s",
-    "Encrypted dataset preprocessing": "1.5239s",
-    "Server setup (load keys + DB once)": "1.5239s",
-    "Client query encryption": "0.0114903s",
-    "Encrypted computation": "0.007094s",
-    "Total": "0.0134213s",
-    "Load query": "0.003048s",
-    "Encrypted computation (slowest shard)": "0.007094s",
-    "Result concatenation": "0s",
-    "Encrypted computation + merge": "0.007094s",
-    "Query stage in-process total": "0.0134213s",
-    "Query stage: shard exchange (incl. compute)": "0.013365s",
-    "Query stage: merge exchange": "4.76837e-06s",
-    "Client decryption": "0.00686049s"
+    "Encrypted dataset preprocessing": "1.6285s",
+    "Setup: shard process start": "0.9912s",
+    "Setup: load evaluation keys": "0.1554s",
+    "Setup: load encrypted database": "0.2028s",
+    "Setup: engine construction": "0.248s",
+    "Setup: warm-up computation": "0.0312s",
+    "Load query": "0.003047s",
+    "Encrypted computation": "0.006986s",
+    "Total": "0.0133512s"
   }
 }

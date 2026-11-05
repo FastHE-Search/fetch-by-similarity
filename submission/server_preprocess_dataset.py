@@ -27,7 +27,7 @@ def main():
     _pool.stop(inst)                       # any pool left by an earlier run
 
     t0 = time.time()
-    _pool.start(inst)
+    shard = _pool.start(inst)               # the slowest shard's timers
     elapsed = time.time() - t0
 
     # The sizing that chose this shard count, printed so a card the
@@ -44,8 +44,25 @@ def main():
     # name (see README.md): the pool coming up -- keys, database
     # regeneration and import, warm-up -- is exactly that, measured here
     # without this interpreter's own start.
-    report_steps(inst, {"Encrypted dataset preprocessing": elapsed,
-                        "Server setup (load keys + DB once)": elapsed})
+    #
+    # Below it, where that time went, so loading can be told apart from
+    # computing. The parts are disjoint and add up to the total: the
+    # slowest shard's own timers, with whatever they cannot see --
+    # spawning the process, its interpreter starting, the READY reaching
+    # us -- booked to its start.
+    seen = sum(shard.values())
+    steps = {
+        "Encrypted dataset preprocessing": elapsed,
+        "Setup: shard process start":
+            shard["start"] + max(0.0, elapsed - seen),
+        "Setup: load evaluation keys": shard["keys"],
+        "Setup: load encrypted database": shard["db"],
+        "Setup: engine construction": shard["engine"],
+        "Setup: warm-up computation": shard["warm"],
+    }
+    for name, t in list(steps.items())[1:]:
+        print(f"    {name[7:]:<24} {t:8.3f}s")
+    report_steps(inst, steps)
     return 0
 
 
