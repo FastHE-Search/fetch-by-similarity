@@ -83,29 +83,38 @@ The remaining sections are organised as follows.
 
 ## Benchmark
 
-Collected 2026-10-09 on an AWS `g7e.48xlarge`: 8x NVIDIA RTX PRO 6000
+Collected 2026-11-05 on an AWS `g7e.48xlarge`: 8x NVIDIA RTX PRO 6000
 Blackwell, 192 vCPU, with the objects in `submission/libs` exactly as
 committed. Each figure is the mean of three runs of one invocation,
 `--num_runs 3`. The columns are the ones the leaderboard shows by
 default, in its order; `Srv` is its server-reported group.
 
+`Server Reported` holds server time only, each figure under one name.
+`Encrypted dataset preprocessing` is the shard pool coming up, followed
+by its parts, which add up to it: the slowest shard's process start,
+evaluation-key load, encrypted-database load, engine construction and
+warm-up. Per query, `Load query` is reading and importing the query
+ciphertext, `Encrypted computation` the homomorphic work (slowest shard
+plus merge) and `Total` the whole server stage. The client stages are
+timed by the harness alone.
+
 **Count**
 
 | Tier | GPUs | Keys | DB | Query | Total | Keygen | DB Enc | Q Enc | Compute | Srv Total | Srv Compute |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| toy | 1 | 416.0M | 320.0M | 1.3M | 2.9705s | 847.7ms | 351ms | 11.67ms | 13.23ms | 11.63ms | 7.097ms |
-| small | 1 | 416.0M | 320.0M | 1.3M | 3.3994s | 852.6ms | 369.1ms | 11.77ms | 15.53ms | 13.86ms | 9.308ms |
-| medium | 1 | 325.0M | 9.0G | 1.1M | 17.158s | 709.4ms | 4.5926s | 10.8ms | 83ms | 81.27ms | 76.75ms |
-| large | 6 | 362.0M | 382.5G | 1.3M | 7.6565m | 757.1ms | 3.035m | 11.83ms | 782.7ms | 780.9ms | 774.6ms |
+| toy | 1 | 416.0M | 320.0M | 1.3M | 3.2454s | 863.1ms | 361.9ms | 11.67ms | 13.7ms | 12.02ms | 7.094ms |
+| small | 1 | 416.0M | 320.0M | 1.3M | 3.3919s | 843.1ms | 358.5ms | 11.83ms | 15.13ms | 13.38ms | 8.824ms |
+| medium | 1 | 325.0M | 9.0G | 1.1M | 17.378s | 713.3ms | 4.5612s | 10.47ms | 83.13ms | 81.45ms | 77.07ms |
+| large | 6 | 362.0M | 382.5G | 1.3M | 7.6967m | 769.7ms | 3.1112m | 11.7ms | 761.6ms | 759.9ms | 754ms |
 
 **Fetch**
 
 | Tier | GPUs | Keys | DB | Query | Total | Keygen | DB Enc | Q Enc | Compute | Srv Total | Srv Compute |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| toy | 1 | 726.5M | 355.0M | 1.4M | 3.4966s | 1.1939s | 372ms | 12.93ms | 16.63ms | 14.93ms | 7.144ms |
-| small | 1 | 726.5M | 358.0M | 1.4M | 3.846s | 1.22s | 420.7ms | 12.7ms | 18.43ms | 16.77ms | 9.295ms |
-| medium | 1 | 344.0M | 10.1G | 1.3M | 17.984s | 746.6ms | 4.5653s | 12.03ms | 167.3ms | 165.6ms | 99.75ms |
-| large | 8 | 4.8G | 388.5G | 5.0M | 8.5274m | 4.5787s | 3.149m | 39.23ms | 3.3497s | 3.3479s | 3.3417s |
+| toy | 1 | 726.5M | 355.0M | 1.4M | 3.6288s | 1.201s | 396.4ms | 12.33ms | 16.5ms | 14.8ms | 7.008ms |
+| small | 1 | 726.5M | 358.0M | 1.4M | 3.9749s | 1.2275s | 400.2ms | 12.6ms | 18.53ms | 16.81ms | 9.314ms |
+| medium | 1 | 344.0M | 10.1G | 1.3M | 17.788s | 742.5ms | 4.4501s | 11.9ms | 161.1ms | 159.3ms | 95.11ms |
+| large | 8 | 4.8G | 388.5G | 5.0M | 8.6543m | 4.6953s | 3.221m | 39.27ms | 3.3165s | 3.3147s | 3.3083s |
 
 The number of GPUs is derived rather than configured, which is why it
 varies by row. Each tier uses the fewest cards that hold its database
@@ -350,7 +359,8 @@ for the indicator, fitted to the workload's promised score gap. See
 *Assumptions*.
 
 **Sharding.** The database is split by block-group across GPUs, one
-process per device. Each shard replicates the rotated query set and
+process per device, pinned to the CPUs of the socket its GPU is attached
+to. Each shard replicates the rotated query set and
 scores its own slice; one shard then adds the partial counts
 **homomorphically** and returns a single ciphertext. Summing decrypted
 per-shard counts on the client would disclose how matches are

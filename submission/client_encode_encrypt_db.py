@@ -19,8 +19,7 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "libs"))
-from fbs._common import (instance, open_client, read_db, read_payloads,
-                     report_steps)
+from fbs._common import instance, open_client, read_db, read_payloads
 
 
 def main():
@@ -82,8 +81,7 @@ def main():
            else f"numpy, {inst.workers} workers")
     print(f"  {total} database ciphertexts in {elapsed:.1f}s "
           f"(one secret key, {how}, no GPU)")
-    # "Client ...": see client_key_generation.py
-    report_steps(inst, {"Client DB encryption": elapsed})
+    # Harness-timed; not a server step (see client_key_generation.py).
     return 0
 
 

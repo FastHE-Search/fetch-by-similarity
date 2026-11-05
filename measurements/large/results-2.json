@@ -1,16 +1,16 @@
 {
   "Timing": {
-    "Dataset generation": "253.1665s",
-    "Dataset preprocessing": "0.0238s",
-    "Key Generation": "4.5787s",
-    "Dataset encoding and encryption": "188.9429s",
-    "Encrypted dataset preprocessing": "53.9059s",
-    "Query generation": "11.5848s",
-    "Query preprocessing": "0.0232s",
-    "Query encryption": "0.0394s",
-    "Encrypted computation": "3.352s",
-    "Result decryption and postprocessing": "0.0155s",
-    "Total": "515.6326s"
+    "Dataset generation": "250.9208s",
+    "Dataset preprocessing": "0.0242s",
+    "Key Generation": "4.6953s",
+    "Dataset encoding and encryption": "193.2594s",
+    "Encrypted dataset preprocessing": "59.7025s",
+    "Query generation": "11.0293s",
+    "Query preprocessing": "0.0218s",
+    "Query encryption": "0.0395s",
+    "Encrypted computation": "3.314s",
+    "Result decryption and postprocessing": "0.0154s",
+    "Total": "523.0222s"
   },
   "Bandwidth": {
     "Public and evaluation keys": "4.8G",
@@ -19,20 +19,14 @@
     "Encrypted results": "40.0M"
   },
   "Server Reported": {
-    "Client key generation": "4.4758s",
-    "Client DB encryption": "188.851s",
-    "Encrypted dataset preprocessing": "53.8678s",
-    "Server setup (load keys + DB once)": "53.8678s",
-    "Client query encryption": "0.0380585s",
-    "Encrypted computation": "3.34395s",
-    "Total": "3.35023s",
-    "Load query": "0.002256s",
-    "Encrypted computation (slowest shard)": "3.33487s",
-    "Result concatenation": "0.00908256s",
-    "Encrypted computation + merge": "3.34395s",
-    "Query stage in-process total": "3.35023s",
-    "Query stage: shard exchange (incl. compute)": "3.34108s",
-    "Query stage: merge exchange": "0.00909305s",
-    "Client decryption": "0.0127389s"
+    "Encrypted dataset preprocessing": "59.6629s",
+    "Setup: shard process start": "5.1296s",
+    "Setup: load evaluation keys": "1.0974s",
+    "Setup: load encrypted database": "8.5275s",
+    "Setup: engine construction": "33.9385s",
+    "Setup: warm-up computation": "10.9699s",
+    "Load query": "0.002326s",
+    "Encrypted computation": "3.30566s",
+    "Total": "3.31217s"
   }
 }

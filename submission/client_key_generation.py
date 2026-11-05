@@ -18,8 +18,7 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "libs"))
-from fbs._common import (instance, open_client, report_steps,
-                         write_stage_context)
+from fbs._common import instance, open_client, write_stage_context
 
 
 def main():
@@ -36,9 +35,8 @@ def main():
 
     print(f"  {len(shifts)} rotation keys provisioned for "
           f"{inst.comparator} at dim {inst.dim}")
-    # "Client ..." so the key cannot match a leaderboard column: the board
-    # fills its server-timing columns from this file by step name.
-    report_steps(inst, {"Client key generation": elapsed})
+    # Not reported to server_reported_steps.json: the harness times this
+    # stage itself, and that file is for the server's own breakdown.
     return 0
 
 
