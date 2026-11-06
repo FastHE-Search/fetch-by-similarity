@@ -44,10 +44,12 @@ process per card, and each size uses the fewest cards whose memory holds
 its slice, so the smaller sizes run on one card and are directly
 comparable with single-GPU submissions.
 
-The server never holds a secret key, and the only value ever decrypted
-is the answer: for Count a single ciphertext, not per-shard subtotals,
-because subtotals would disclose how matches are distributed across the
-database.
+The server never holds a secret key. For Count the only value ever
+decrypted is the answer, a single ciphertext rather than per-shard
+subtotals, because subtotals would disclose how matches are distributed
+across the database. Fetch at Large, the one Fetch configuration that
+runs on more than one GPU, returns each shard's results separately; see
+*Sharding*.
 
 **This submission is distributed in compiled form.** The circuit, the
 backend and the CUDA work are compiled objects under `submission/libs`,
@@ -361,11 +363,26 @@ for the indicator, fitted to the workload's promised score gap. See
 **Sharding.** The database is split by block-group across GPUs, one
 process per device, pinned to the CPUs of the socket its GPU is attached
 to. Each shard replicates the rotated query set and
-scores its own slice; one shard then adds the partial counts
+scores its own slice.
+
+For **Count**, one shard then adds the partial counts
 **homomorphically** and returns a single ciphertext. Summing decrypted
 per-shard counts on the client would disclose how matches are
 distributed across the database, so the addition happens where there is
 no secret key and only the total is ever decrypted.
+
+For **Fetch**, the shards' results are **not** combined. Toy, small and
+medium run on one shard, so there is nothing to combine. At Large, each
+of the eight shards runs the compact circuit on its own slice and
+returns its fixed five ciphertexts; the server concatenates them in
+shard order into the one result file, and the client decrypts and
+decodes each shard's part on its own. A homomorphic sum would overlay
+the shards' payloads, since each compacts its matches into the same rank
+rows; a proper merge would need either a larger output or a second
+ranking pass across shards, which at Large costs another bootstrap. The
+server learns nothing either way, as each shard's output has a fixed
+size. The client, however, learns which shard, and so which eighth of
+the database, each returned payload came from.
 
 **The database is transmitted with its public polynomial as a seed.** A
 secret-key ciphertext is `(b, a)` with `a` uniform and independent of the
@@ -405,7 +422,9 @@ rank within its slot column by masked suffix sums, a degree-31 equality
 polynomial selects rank *r*, and the payloads are gathered and summed
 onto one output row. Because the output size is fixed, **the server
 learns nothing about how many records matched** — the response has the
-same shape for zero matches as for thousands. It costs nine levels
+same shape for zero matches as for thousands. Each shard returns its
+own five ciphertexts, which are not combined across shards (see
+*Sharding*); at Large that is 40 in all. It costs nine levels
 past the comparator; at Large those come from a bootstrap rather than a
 longer chain.
 
@@ -698,9 +717,11 @@ built by the same script; server setup is the Python shard pool.
 
 ### Module layout
 
-Orion and its Cheddar backend live under `submission/orion`, so there is
-nothing to place on `PYTHONPATH`. Each stage puts `submission/` on
-`sys.path` itself, which resolves both `fbs` and `orion`. The subset is
+Orion and its Cheddar backend are compiled into
+`submission/libs/orion.cpython-310-x86_64-linux-gnu.so`, beside `fbs`
+and the CUDA extension, so there is nothing to place on `PYTHONPATH`.
+Each stage puts `submission/libs` on `sys.path` itself, which resolves
+`fbs`, `orion` and the extension. The subset is
 deliberately small and imports no torch: `orion/__init__.py` resolves
 its public API lazily, so the backend loads without the framework
 behind it.
